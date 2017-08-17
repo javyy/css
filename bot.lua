@@ -229,57 +229,7 @@ function tdcli_update_callback(data)
 						return send(msg.chat_id_, msg.id_, "فرایند عضویت خودکار متوقف شد.")
 					elseif matches == "تایید لینک" then	
 						redis:set("botBOT-IDmaxlink", true)
-						redis:set("botBOT-IDofflink", true)
-						return send(msg.chat_id_, msg.id_, "فرایند تایید لینک در های در انتظار متوقف شد.")
-					elseif matches == "شناسایی لینک" then	
-						redis:del("botBOT-IDlink")
-						return send(msg.chat_id_, msg.id_, "فرایند شناسایی لینک متوقف شد.")
-					elseif matches == "افزودن مخاطب" then	
-						redis:del("botBOT-IDsavecontacts")
-						return send(msg.chat_id_, msg.id_, "فرایند افزودن خودکار مخاطبین به اشتراک گذاشته شده متوقف شد.")
-					end
-				elseif text:match("^(شروع) (.*)$") then
-					local matches = text:match("^شروع (.*)$")
-					if matches == "عضویت" then	
-						redis:del("botBOT-IDmaxjoin")
-						redis:del("botBOT-IDoffjoin")
-						return send(msg.chat_id_, msg.id_, "فرایند عضویت خودکار فعال شد.")
-					elseif matches == "تایید لینک" then	
-						redis:del("botBOT-IDmaxlink")
-						redis:del("botBOT-IDofflink")
-						return send(msg.chat_id_, msg.id_, "فرایند تایید لینک های در انتظار فعال شد.")
-					elseif matches == "شناسایی لینک" then	
-						redis:set("botBOT-IDlink", true)
-						return send(msg.chat_id_, msg.id_, "فرایند شناسایی لینک فعال شد.")
-					elseif matches == "افزودن مخاطب" then	
-						redis:set("botBOT-IDsavecontacts", true)
-						return send(msg.chat_id_, msg.id_, "فرایند افزودن خودکار مخاطبین به اشتراک  گذاشته شده فعال شد.")
-					end
-				elseif text:match("^(حداکثر گپ) (%d+)$") then
-					local matches = text:match("%d+")
-					redis:set('botBOT-IDmaxgroups', tonumber(matches))
-					return send(msg.chat_id_, msg.id_, "<i>تعداد حداکثر سوپرگپ های تبلیغ‌گر تنظیم شد به : </i><b> "..matches.." </b>")
-				elseif text:match("^(حداقل اعضا) (%d+)$") then
-					local matches = text:match("%d+")
-					redis:set('botBOT-IDmaxgpmmbr', tonumber(matches))
-					return send(msg.chat_id_, msg.id_, "<i>عضویت در گپ های با حداقل</i><b> "..matches.." </b> عضو تنظیم شد.")
-				elseif text:match("^(حذف حداکثر گپ)$") then
-					redis:del('botBOT-IDmaxgroups')
-					return send(msg.chat_id_, msg.id_, "تعیین حد مجاز گپ نادیده گرفته شد.")
-				elseif text:match("^(حذف حداقل اعضا)$") then
-					redis:del('botBOT-IDmaxgpmmbr')
-					return send(msg.chat_id_, msg.id_, "تعیین حد مجاز اعضای گپ نادیده گرفته شد.")
-				elseif text:match("^(افزودن مدیر) (%d+)$") then
-					local matches = text:match("%d+")
-					if redis:sismember('botBOT-IDadmin', matches) then
-						return send(msg.chat_id_, msg.id_, "<i>کاربر مورد نظر در حال حاضر مدیر است.</i>")
-					elseif redis:sismember('botBOT-IDmod', msg.sender_user_id_) then
-						return send(msg.chat_id_, msg.id_, "شما دسترسی ندارید.")
-					else
-						redis:sadd('botBOT-IDadmin', matches)
-						redis:sadd('botBOT-IDmod', matches)
-						return send(msg.chat_id_, msg.id_, "<i>مقام کاربر به مدیر ارتقا یافت</i>")
-					end
+
 			if is_javad(msg) then
 				if text:match("^(افزودن مدیر) (%d+)$") then
 					local matches = text:match("%d+")
