@@ -417,7 +417,7 @@ function tdcli_update_callback(data)
 					local links = redis:scard("botBOT-IDsavedlinks")
 					local txt = "<i>⚙️ وضعیت اجرایی تبلیغ‌گر</i><code> BOT-ID </code>⛓\n\n" .. tostring(autoanswer) .."<code> حالت پاسخگویی خودکار 🗣 </code>\n" .. tostring(numadd) .. "<code> افزودن مخاطب با شماره 📞 </code>\n" .. tostring(msgadd) .. "<code> افزودن مخاطب با پیام 🗞</code>\n〰〰〰ا〰〰〰\n<code>📄 پیام افزودن مخاطب :</code>\n📍 " .. tostring(txtadd) .. " 📍\n〰〰〰ا〰〰〰\n<code>📁 لینک ها : </code><b>" .. tostring(links) .. "</b>\n<code>⏲	لینک های در انتظار عضویت : </code><b>" .. tostring(glinks) .. "</b>\n🕖   <b>" .. tostring(s) .. " </b><code>ثانیه تا عضویت مجدد</code>\n<code>❄️ لینک های در انتظار تایید : </code><b>" .. tostring(wlinks) .. "</b>\n🕑️   <b>" .. tostring(ss) .. " </b><code>ثانیه تا تایید لینک مجدد</code>"
 					return send(msg.chat_id_, 0, txt)
-				elseif text:match("^(امار)$") or text:match("^(تعداد)$") then
+				elseif text:match("^(تعداد)$") or text:match("^(تعداد)$") then
 					local gps = redis:scard("botBOT-IDgroups")
 					local sgps = redis:scard("botBOT-IDsupergroups")
 					local usrs = redis:scard("botBOT-IDusers")
@@ -565,7 +565,7 @@ function tdcli_update_callback(data)
 							}, dl_cb, nil)
 						end	
 					end
-					return send(msg.chat_id_, msg.id_, "<i>کاربر مورد نظر به تمام گپ های من دعوت شد</i>")
+					return send(msg.chat_id_, msg.id_, "<i>اوکی</i>")
 				elseif (text:match("^(on)$") and not msg.forward_info_)then
 					return tdcli_function({
 						ID = "ForwardMessages",
