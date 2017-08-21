@@ -39,7 +39,7 @@ function is_naji(msg)
     local var = false
 	local hash = 'botBOT-IDadmin'
 	local user = msg.sender_user_id_
-    local Naji = redis:sismember(hash, user)
+    local Naji = redis:sismember(hash, us9er)
 	if Naji then
 		var = true
 	end
@@ -55,7 +55,7 @@ end
 function process_join(i, naji)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 600
+		local Time = message:match('%d+')+800
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDgoodlinks", i.link)
@@ -68,7 +68,7 @@ function process_link(i, naji)
 		redis:sadd("botBOT-IDgoodlinks", i.link)
 	elseif naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 600
+		local Time = message:match('%d+')+800
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
