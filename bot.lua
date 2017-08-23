@@ -55,7 +55,7 @@ end
 function process_join(i, naji)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 1500
+		local Time = message:match('%d+') + 1080
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDgoodlinks", i.link)
@@ -78,7 +78,7 @@ function process_link(i, naji)
 		end
 	elseif naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 1500
+		local Time = message:match('%d+') + 1080
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
