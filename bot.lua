@@ -17,6 +17,9 @@ function get_admin ()
   	end
   	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
 end
+if msg.to.type ="chat" and matches[1]== "سلام" then
+return "سلام"
+end
 function get_bot (i, naji)
 	function bot_info (i, naji)
 		redis:set("botBOT-IDid",naji.id_)
