@@ -55,7 +55,7 @@ end
 function process_join(i, naji)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 1080
+		local Time = message:match('%d+') 
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDgoodlinks", i.link)
@@ -78,14 +78,14 @@ function process_link(i, naji)
 		end
 	elseif naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+') + 1080
+		local Time = message:match('%d+') 
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
 	end
 end
 function find_link(text)
-	if text:match("https://telegram.me/joinchat/%S+") or text:match("https://t.me/joinchat/%S+") or text:match("https://telegram.dog/joinchat/%S+") then
+	if text:match("https://telegram.me/joinchat/%S+") or text:match("https://t.me/joinchat/%S+") then
 		local text = text:gsub("t.me", "telegram.me")
 		local text = text:gsub("telegram.dog", "telegram.me")
 		for link in text:gmatch("(https://telegram.me/joinchat/%S+)") do
