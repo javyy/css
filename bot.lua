@@ -1,7 +1,7 @@
 redis = (loadfile "redis.lua")()
 redis = redis.connect('127.0.0.1', 6379)
 apiBots = {
-    [0]={ChatId = "389905657", Username = "@Nastaran_fwd_bot"}
+    [0]={ChatId = "409295312", Username = "@ads_fwd_nabot"}
 }
 
 function vardump(value, depth, key)
