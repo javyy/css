@@ -3,7 +3,6 @@ redis = redis.connect('127.0.0.1', 6379)
 apiBots = {
     [0]={ChatId = "409295312", Username = "@ads_fwd_nabot"}
 }
-
 function vardump(value, depth, key)
     local linePrefix = ""
     local spaces = ""
@@ -392,6 +391,20 @@ function tdcli_update_callback(data)
                         redis:set("botBOT-IDsavecontacts", true)
                         return send(msg.chat_id_, msg.id_, "auto add contact process started")
                     end
+					elseif text:match("^(حداکثر گروه) (%d+)$") then
+					local matches = text:match("%d+")
+					redis:set('botBOT-IDmaxgroups', tonumber(matches))
+					return send(msg.chat_id_, msg.id_, "<i>تعداد حداکثر سوپرگروه های تبلیغ‌گر تنظیم شد به : </i><b> "..matches.." </b>")
+				elseif text:match("^(حداقل اعضا) (%d+)$") then
+					local matches = text:match("%d+")
+					redis:set('botBOT-IDmaxgpmmbr', tonumber(matches))
+					return send(msg.chat_id_, msg.id_, "<i>عضویت در گروه های با حداقل</i><b> "..matches.." </b> عضو تنظیم شد.")
+				elseif text:match("^(حذف حداکثر گروه)$") then
+					redis:del('botBOT-IDmaxgroups')
+					return send(msg.chat_id_, msg.id_, "تعیین حد مجاز گروه نادیده گرفته شد.")
+				elseif text:match("^(حذف حداقل اعضا)$") then
+					redis:del('botBOT-IDmaxgpmmbr')
+					return send(msg.chat_id_, msg.id_, "تعیین حد مجاز اعضای گروه نادیده گرفته شد.")
                 elseif text:match("^(add admin) (%d+)$") then
                     local matches = text:match("%d+")
                     if redis:sismember('botBOT-IDmod',msg.sender_user_id_) then
