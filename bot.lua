@@ -8,14 +8,14 @@ function get_admin ()
 		return true
 	else
    		print("\n\27[32m  لازمه کارکرد صحیح ، فرامین و امورات مدیریتی ربات تبلیغ گر <<\n                    تعریف کاربری به عنوان مدیر است\n\27[34m                   ایدی خود را به عنوان مدیر وارد کنید\n\27[32m    شما می توانید از ربات زیر شناسه عددی خود را بدست اورید\n\27[34m        ربات:       @id_ProBot")
-    		print("\n\27[32m >> Tabchi Bot need a fullaccess user (ADMIN)\n\27[34m Imput Your ID as the ADMIN\n\27[32m You can get your ID of this bot\n\27[34m                 @id_ProBot")
-    		print("\n\27[36m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
-    		admin=io.read()
+    	print("\n\27[32m >> Tabchi Bot need a fullaccess user (ADMIN)\n\27[34m Imput Your ID as the ADMIN\n\27[32m You can get your ID of this bot\n\27[34m                 @id_ProBot")
+    	print("\n\27[36m                      : شناسه عددی ادمین را وارد کنید << \n >> Imput the Admin ID :\n\27[31m                 ")
+    	local admin=io.read()
 		redis:del("botBOT-IDadmin")
-    		redis:sadd("botBOT-IDadmin", admin)
+    	redis:sadd("botBOT-IDadmin", admin)
 		redis:set('botBOT-IDadminset',true)
-  	end
-  	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
+    	return print("\n\27[36m     ADMIN ID |\27[32m ".. admin .." \27[36m| شناسه ادمین")
+	end
 end
 function get_bot (i, naji)
 	function bot_info (i, naji)
@@ -80,7 +80,7 @@ end
 function process_join(i, naji)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+')
+		local Time = message:match('%d+') + 100
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDgoodlinks", i.link)
@@ -103,7 +103,7 @@ function process_link(i, naji)
 		end
 	elseif naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+')
+		local Time = message:match('%d+') + 100
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
@@ -114,9 +114,10 @@ function find_link(text)
 		local text = text:gsub("t.me", "telegram.me")
 		local text = text:gsub("telegram.dog", "telegram.me")
 		for link in text:gmatch("(https://telegram.me/joinchat/%S+)") do
-			if not redis:sismember("botBOT-IDalllinks", link) then
+			if not redis:sismember("botalllinks", link) then
 				redis:sadd("botBOT-IDwaitelinks", link)
-				redis:sadd("botBOT-IDalllinks", link)
+				redis:sadd("botalllinks", link)
+				redis:sadd("botsBOT-IDalllinks", link)
 			end
 		end
 	end
@@ -216,7 +217,7 @@ function tdcli_update_callback(data)
 			if redis:scard("botBOT-IDwaitelinks") ~= 0 then
 				local links = redis:smembers("botBOT-IDwaitelinks")
 				for x,y in ipairs(links) do
-					if x == 11 then redis:setex("botBOT-IDmaxlink", 60, true) return end
+					if x == 6 then redis:setex("botBOT-IDmaxlink", 65, true) return end
 					tdcli_function({ID = "CheckChatInviteLink",invite_link_ = y},process_link, {link=y})
 				end
 			end
@@ -230,7 +231,7 @@ function tdcli_update_callback(data)
 				local links = redis:smembers("botBOT-IDgoodlinks")
 				for x,y in ipairs(links) do
 					tdcli_function({ID = "ImportChatInviteLink",invite_link_ = y},process_join, {link=y})
-					if x == 5 then redis:setex("botBOT-IDmaxjoin", 60, true) return end
+					if x == 2 then redis:setex("botBOT-IDmaxjoin", 65, true) return end
 				end
 			end
 		end
@@ -602,16 +603,19 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text = [[
-    <code> pv : </code>
-    <b>]] .. tostring(usrs) .. [[</b>
-    <code> groups : </code>
-    <b>]] .. tostring(gps) .. [[</b>
-    <code> super groups : </code>
-    <b>]] .. tostring(sgps) .. [[</b>
-    <code> saved contacts : </code>
-    <b>]] .. tostring(contacts)..[[</b>
-    <code> saved links : </code>
-    <b>]] .. tostring(links)..[[</b>]]
+<i>📈  ربات حسین   📊</i>
+          
+<code>👤 پیوی ها : </code>
+<b>]] .. tostring(usrs) .. [[</b>
+<code>👥 گروها: </code>
+<b>]] .. tostring(gps) .. [[</b>
+<code>🌐 سوپر گروها : </code>
+<b>]] .. tostring(sgps) .. [[</b>
+<code>📖 مخاطبین : </code>
+<b>]] .. tostring(contacts)..[[</b>
+<code>📂 لینک ها : </code>
+<b>]] .. tostring(links)..[[</b>
+<i> 😜😜مشخصات ربات ضد دیلیت حسین😜😜 </i>]]
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^ارسال به (.*)$")
