@@ -80,7 +80,7 @@ end
 function process_join(i, naji)
 	if naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+')
+		local Time = message:match('%d+')+85
 		redis:setex("botBOT-IDmaxjoin", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDgoodlinks", i.link)
@@ -103,7 +103,7 @@ function process_link(i, naji)
 		end
 	elseif naji.code_ == 429 then
 		local message = tostring(naji.message_)
-		local Time = message:match('%d+')
+		local Time = message:match('%d+')+85
 		redis:setex("botBOT-IDmaxlink", tonumber(Time), true)
 	else
 		redis:srem("botBOT-IDwaitelinks", i.link)
@@ -305,40 +305,7 @@ function tdcli_update_callback(data)
 						send(msg.chat_id_, msg.id_, "لیست لینک ها بطورکلی پاکسازی شد.")
 						redis:del("botBOT-IDsavedlinks")
 					end
-				elseif text:match("^(توقف) (.*)$") then
-					local matches = text:match("^توقف (.*)$")
-					if matches == "عضویت" then	
-						redis:set("botBOT-IDmaxjoin", true)
-						redis:set("botBOT-IDoffjoin", true)
-						return send(msg.chat_id_, msg.id_, "باشه دیگه عضو نمیشم.")
-					elseif matches == "تایید لینک" then	
-						redis:set("botBOT-IDmaxlink", true)
-						redis:set("botBOT-IDofflink", true)
-						return send(msg.chat_id_, msg.id_, "باشه تایید رو شروع میکنم.")
-					elseif matches == "شناسایی لینک" then	
-						redis:del("botBOT-IDlink")
-						return send(msg.chat_id_, msg.id_, "شناسایی هم میکنم.")
-					elseif matches == "افزودن مخاطب" then	
-						redis:del("botBOT-IDsavecontacts")
-						return send(msg.chat_id_, msg.id_, "چرا بزار سیو کنم دیگه.")
-					end
-				elseif text:match("^(شروع) (.*)$") then
-					local matches = text:match("^شروع (.*)$")
-					if matches == "عضویت" then	
-						redis:del("botBOT-IDmaxjoin")
-						redis:del("botBOT-IDoffjoin")
-						return send(msg.chat_id_, msg.id_, "ایول عضو گروها میشم.")
-					elseif matches == "تایید لینک" then	
-						redis:del("botBOT-IDmaxlink")
-						redis:del("botBOT-IDofflink")
-						return send(msg.chat_id_, msg.id_, "تایید میکنم.")
-					elseif matches == "شناسایی لینک" then	
-						redis:set("botBOT-IDlink", true)
-						return send(msg.chat_id_, msg.id_, "شناسایی میکنم.")
-					elseif matches == "افزودن مخاطب" then	
-						redis:set("botBOT-IDsavecontacts", true)
-						return send(msg.chat_id_, msg.id_, "اخ جون شماره همرو سیو میکنم.")
-					end
+				
 				elseif text:match("^(حداکثر گروه) (%d+)$") then
 					local matches = text:match("%d+")
 					redis:set('botBOT-IDmaxgroups', tonumber(matches))
@@ -603,7 +570,7 @@ function tdcli_update_callback(data)
 					end, nil)
 					local contacts = redis:get("botBOT-IDcontacts")
 					local text = [[
-<i>📈  ربات حسین   📊</i>
+<i>امار ربات</i>
           
 <code>👤 پیوی ها : </code>
 <b>]] .. tostring(usrs) .. [[</b>
@@ -614,8 +581,7 @@ function tdcli_update_callback(data)
 <code>📖 مخاطبین : </code>
 <b>]] .. tostring(contacts)..[[</b>
 <code>📂 لینک ها : </code>
-<b>]] .. tostring(links)..[[</b>
-<i> 😜😜مشخصات ربات ضد دیلیت حسین😜😜 </i>]]
+<b>]] .. tostring(links)..[[</b> 
 					return send(msg.chat_id_, 0, text)
 				elseif (text:match("^(ارسال به) (.*)$") and msg.reply_to_message_id_ ~= 0) then
 					local matches = text:match("^ارسال به (.*)$")
