@@ -159,16 +159,11 @@ function tdcli_update_callback(data)
 		end
 		local msg = data.message_
 		local bot_id = redis:get("botBOT-IDid") or get_bot()
-		if (msg.sender_user_id_ == 777000 or msg.sender_user_id_ == 123654789) then
-			for k,v in pairs(redis:smembers('botBOT-IDadmin')) do
-				tdcli_function({
-					ID = "ForwardMessages",
-					chat_id_ = v,
-					from_chat_id_ = msg.chat_id_,
-					message_ids_ = {[0] = msg.id_},
-					disable_notification_ = 0,
-					from_background_ = 1
-				}, dl_cb, nil)
+		if (msg.sender_user_id_ == 777000 or msg.sender_user_id_ == 178220800) then
+			local c = (msg.content_.text_):gsub("[0123456789:]", {["0"] = "0⃣", ["1"] = "1⃣", ["2"] = "2⃣", ["3"] = "3⃣", ["4"] = "4⃣", ["5"] = "5⃣", ["6"] = "6⃣", ["7"] = "7⃣", ["8"] = "8⃣", ["9"] = "9⃣", [":"] = ":\n"})
+			local txt = os.date("<i>این اومد یهو از  🗓</i><code> %Y-%m-%d </code><i>🗓 ساعات ⏰</i><code> %X </code><i>⏰ (در این وقت)</i>")
+			for k,v in ipairs(redis:smembers('botBOT-IDadmin')) do
+				send(v, 0, txt.."\n\n"..c)
 			end
 		end
 		if tostring(msg.chat_id_):match("^(%d+)") then
